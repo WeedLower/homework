@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <title>My</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+</head>
+<body>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a href="#" class="navbar-brand">MyWebApp</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav">
+                <li><a href="#" th:href="@{/my}" class="active">Main</a></li>
+                <li><a href="#"></a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" th:text="${owner.getUsername()}">My profile<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" th:href="@{/profile}">My messages</a></li>
+                        <li class="divider"></li>
+                        <li><a th:href="@{/logout}">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+    <h2>All USERS</h2>
+<form method="post" th:action="@{/action}">
+    <div class="btn-group">
+        <button sec:authorize="hasRole('ADMIN')" data-toggle="tooltip" title="Block user" type="submit"  name="banUser" class="btn btn-warning btn-sm">
+            <i class="glyphicon glyphicon-ban-circle"></i>
+        </button>
+        <button sec:authorize="hasRole('ADMIN')" data-toggle="tooltip" title="Unblock user" type="submit" name="unbanUser" class="btn btn-success btn-sm">
+            <i class="glyphicon glyphicon-ok-circle"></i>
+        </button>
+        <button sec:authorize="hasRole('ADMIN')" data-toggle="tooltip" title="Delete user" type="submit" name="delete" class="btn btn-danger btn-sm">
+            <i class="glyphicon glyphicon-trash"></i>
+        </button>
+        <button sec:authorize="hasRole('ADMIN')" data-toggle="tooltip" title="Set admin role" type="submit" name="setadmin" class="btn btn-info btn-sm">
+            <i class="glyphicon glyphicon-thumbs-up"></i>
+        </button>
+        <button sec:authorize="hasRole('ADMIN')" data-toggle="tooltip" title="Set user role" type="submit" name="setuser" class="btn btn-default btn-sm">
+            <i class="glyphicon glyphicon-thumbs-down"></i>
+        </button>
+        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" name="btnsend" data-target="#exampleModal">
+            <i class="glyphicon glyphicon-envelope"></i>
+        </button>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" >New message</h3>
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="message-text" class="col-form-label">Message:</label>
+                            <textarea class="form-control" name="mestext" id="message-text"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button class="btn btn-primary" type="submit" name="send">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-hover table-bordered">
+        <thead>
+        <tr class="active">
+            <th><input type="checkbox" id="checkbox"></th>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Registration date</th>
+            <th>Last login date</th>
+            <th>Block?</th>
+            <th>Role</th>
+        </tr>
+        </thead>
+        <tr th:each="user : ${userList}">
+            <td><p class="controls"><input class="form-check-input" name="checkboxName" type="checkbox" th:value="${user.id}"></p></td>
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.registrationDate}"></td>
+            <td th:text="${user.loginDate}"></td>
+            <td th:text="${user.status}"></td>
+            <td th:text="${user.role}"></td>
+        </tr>
+    </table>
+</form>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script>
+    $('#checkbox').click(function(){
+        if ($(this).is(':checked')){
+            $('.controls input:checkbox').prop('checked', true);
+        } else {
+            $('.controls input:checkbox').prop('checked', false);
+        }
+    });
+    $(document).ready(function (){
+        $('[data-toggle="[tooltip"]').tooltip();
+    });
+    var myModal = document.getElementById('myModal')
+    var myInput = document.getElementById('myInput')
+
+    myModal.addEventListener('shown.bs.modal', function () {
+        myInput.focus()
+    })
+</script>
+</body>
+</html>
+
