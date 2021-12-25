@@ -89,6 +89,9 @@ public class MyPageController {
                 int iduser = Integer.parseInt(idrateStr);
                 myappUserRepository.setStatusTrue(iduser);
                 myappUserRepository.setChangedTrue(iduser);
+            }
+            for(String idrateStr : idUser){
+                int iduser = Integer.parseInt(idrateStr);
                 if (myAppUser.getId()==iduser){
                     return "redirect:/logout";
                 }
@@ -121,6 +124,9 @@ public class MyPageController {
                 int iduser = Integer.parseInt(idrateStr);
                 myappUserRepository.deleteById(iduser);
                 myappUserRepository.setChangedTrue(iduser);
+            }
+            for(String idrateStr : idUser){
+                int iduser = Integer.parseInt(idrateStr);
                 if (myAppUser.getId()==iduser){
                     return "redirect:/logout";
                 }
